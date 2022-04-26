@@ -1,0 +1,11 @@
+[package]
+name = "pdfox"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+printpdf = "0.5.0"
+serde = "1.0.136"
+serde_json = "1.0"

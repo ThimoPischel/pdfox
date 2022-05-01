@@ -1,12 +1,13 @@
 mod pdfox_color;
-mod pdfox_component;
-mod pdfox_core;
-mod pdfox_layout;
+mod pdfox_object;
 mod pdfox_line;
-mod pdfox_point;
+mod pdfox_points;
+mod pdfox_link;
+mod pdfox_layout;
+mod pdfox_pagegroup;
+mod pdfox_page;
 mod args;
 
-use pdfox_layout::*;
 use args::*;
 
 fn main() {

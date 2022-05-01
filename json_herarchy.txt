@@ -1,0 +1,126 @@
+Def:
+____________________________________________________________
+
+Files:
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+/file_type.json
+  Type[] or Type{}
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Type will be explained in Types
+[] require an array of Type
+{} require an object of Type
+___________________________________________________________
+
+Groups:
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+<Groupname>
+  str       -> type
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+str will be the string that represent in the json
+type will match to one Type
+
+<Example>
+// all from "Example" - Group
+
+<Example(hallo | world)>
+// only hallo or world from the group are allowed
+// hallo and world would match str
+
+<Example>{}
+// {
+//  "type": <Example>
+//  "value": <Example>
+// }
+___________________________________________________________
+
+Type:
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Typename: type
+  a : ExampleType
+  #include B
+  ? c: bool -> false
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+the "type" explaines the type of this type, for example {},
+[], String, float
+
+the "a" is a field of this object (requires type to be a
+object)
+
+the "ExampleType" would be the type of the "a"-field
+
+the "#include B" means that every field of the B Type are
+included into this object.
+
+the ? makes the field optional and the "-> false" sets the
+default as false
+___________________________________________________________
+
+
+/layout.json
+  Layout[]
+
+/data.json
+  Export[]
+
+<PrefabTypes>
+  pagegroup -> Page[]
+
+<ObjectTypes>
+  link      -> String
+  float     -> float
+  int       -> int
+  bool      -> bool
+  string    -> string
+  line      -> Line
+  points    -> Points
+  color     -> Color
+
+<ColorTypes>
+  rgba      -> Color_RGBA 
+
+Page: {}
+  ? size_x: float -> 297.0
+  ? size_y: float -> 210.0
+  objects: <ObjectTypes(link | line)>{}[]
+
+Export: {}
+  export_name: String
+  ? links: <ObjectTypes>{}[]
+  #include <PrefabTypes>{}
+
+Layout: {}
+  name: String 
+  #include <PrefabTypes>{}
+
+
+Links: {}
+  link: String
+  #include <ObjectTypes>{}
+
+Color_RGBA: {}
+  ? r: float -> 0.0
+  ? g: float -> 0.0
+  ? b: float -> 0.0
+  ? a: float -> 1.0
+
+Color: {}
+  type: String <ColorTypes>
+  #include <ColorTypes>
+
+Koord: {}
+  x: float
+  y: float
+
+Points: {}
+  ? is_relativ: bool -> false
+  koords: Koord[]  
+
+Line: {}
+  points:           <ObjectTypes(link | points)>{}
+  ? fill_color:       <ObjectTypes(link | color)>{} -> transparent
+  ? border_color:     <ObjectTypes(link | color)>{} -> black
+  ? is_closed:        <ObjectTypes(link | bool)>{} -> false
+  ? has_fill:         <ObjectTypes(link | bool)>{} -> false
+  ? has_stroke:       <ObjectTypes(link | bool)>{} -> false
+  ? is_clipping_path: <ObjectTypes(link | bool)>{} -> false
+  

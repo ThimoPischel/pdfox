@@ -1,20 +1,64 @@
 use serde_json::Value;
+use crate::pdfox_link::*;
+use crate::pdfox_object::*;
 
 #[derive(Debug)]
-pub struct PdfoxColor {
+pub struct PdfoxColor_RGBA {
     r: f32,
     g: f32,
     b: f32,
     a: f32
 }
-impl PdfoxColor {
-    pub fn new(json: &Value) -> PdfoxColor {
+impl PdfoxColor_RGBA {
+    pub fn from_json(json: &Value) -> PdfoxColor_RGBA {
         let json_object = json.as_object().expect("color value is no object");
-        PdfoxColor {
-            r: json_object["r"].as_f64().expect("color field 'r' not found or float") as f32,
-            g: json_object["g"].as_f64().expect("color field 'g' not found or float") as f32,
-            b: json_object["b"].as_f64().expect("color field 'b' not found or float") as f32,
-            a: json_object["a"].as_f64().expect("color field 'a' not found or float") as f32
+        let mut color =  PdfoxColor_RGBA {
+            r: 0.0,
+            g: 0.0,
+            b: 0.0,
+            a: 1.0
+        };
+
+        color.r = match &json_object["r"] {
+            Value::Number(number) => number.as_f64().expect("RGBA color r failed parsing") as f32,
+            Value::Null => color.r,
+            _ => panic!("rgba color 'r' have to be a number")
+        };
+
+        color.g = match &json_object["g"] {
+            Value::Number(number) => number.as_f64().expect("RGBA color g failed parsing") as f32,
+            Value::Null => color.g,
+            _ => panic!("rgba color 'g' have to be a number")
+        };
+
+        color.b = match &json_object["b"] {
+            Value::Number(number) => number.as_f64().expect("RGBA color b failed parsing") as f32,
+            Value::Null => color.b,
+            _ => panic!("rgba color 'b' have to be a number")
+        };
+        
+        color.a = match &json_object["a"] {
+            Value::Number(number) => number.as_f64().expect("RGBA color a failed parsing") as f32,
+            Value::Null => color.a,
+            _ => panic!("rgba color 'a' have to be a number")
+        };
+
+        color
+    }
+}
+
+
+#[derive(Debug)]
+pub enum PdfoxColor {
+    RGBA(PdfoxColor_RGBA)
+}
+impl PdfoxColor {
+    pub fn from_json(json: &Value) -> PdfoxColor {
+        let json_object = json.as_object().expect("color value is no object");
+
+        match json_object["type"].as_str().expect("color has no type") {
+            "rgba" => PdfoxColor::RGBA(PdfoxColor_RGBA::from_json(&json)),
+            _ => panic!("unknown color type")
         }
     }
 }

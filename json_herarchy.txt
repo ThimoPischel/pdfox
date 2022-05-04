@@ -117,7 +117,7 @@ Points: {}
 
 Line: {}
   points:           <ObjectTypes(link | points)>{}
-  ? fill_color:       <ObjectTypes(link | color)>{} -> transparent
+  ? fill_color:       <ObjectTypes(link | color)>{} -> black
   ? border_color:     <ObjectTypes(link | color)>{} -> black
   ? is_closed:        <ObjectTypes(link | bool)>{} -> false
   ? has_fill:         <ObjectTypes(link | bool)>{} -> false

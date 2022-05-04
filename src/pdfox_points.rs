@@ -8,8 +8,11 @@ pub struct PdfoxPoints {
     koords: Vec<PdfoxV2>
 }
 impl PdfoxPoints {
-    pub fn from_json(json: &Value) -> PdfoxPoints {
-        let json_object = json.as_object().expect("Points value is no object!");
+    pub fn from_json(json: &Value) -> Result<PdfoxPoints, Vec<&str>> {
+        let json_object = match json.as_object() {
+            Some(o) => o,
+            None => return Err(vec!["color value is no object"])
+        };
         let mut points = PdfoxPoints {
             is_relative: false,
             koords: Vec::new()
@@ -19,14 +22,14 @@ impl PdfoxPoints {
         points.is_relative = match is_relative {
             Value::Null => points.is_relative,
             Value::Bool(b) => b,
-            _ => panic!("points 'is_relative' field should be a bool")
+            _ => return Err(vec!["points 'is_relative' field should be a bool"])
         };
 
         for point in json_object["koords"].as_array().expect("koords has to be an array") {
             points.koords.push(PdfoxV2::new(&point));
         }
 
-        points
+        Ok(points)
     }
 }
 

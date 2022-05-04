@@ -12,12 +12,7 @@ pub struct PdfoxColor_RGBA {
 impl PdfoxColor_RGBA {
     pub fn from_json(json: &Value) -> PdfoxColor_RGBA {
         let json_object = json.as_object().expect("color value is no object");
-        let mut color =  PdfoxColor_RGBA {
-            r: 0.0,
-            g: 0.0,
-            b: 0.0,
-            a: 1.0
-        };
+        let mut color =  PdfoxColor_RGBA::black();
 
         color.r = match &json_object["r"] {
             Value::Number(number) => number.as_f64().expect("RGBA color r failed parsing") as f32,
@@ -45,6 +40,33 @@ impl PdfoxColor_RGBA {
 
         color
     }
+
+    pub fn black() -> PdfoxColor_RGBA {
+        PdfoxColor_RGBA {
+            r: 0.0,
+            g: 0.0,
+            b: 0.0,
+            a: 1.0
+        }
+    }
+
+    pub fn white() -> PdfoxColor_RGBA {
+        PdfoxColor_RGBA {
+            r: 1.0,
+            g: 1.0,
+            b: 1.0,
+            a: 1.0
+        }
+    }
+
+    pub fn transparent() -> PdfoxColor_RGBA {
+        PdfoxColor_RGBA {
+            r: 0.0,
+            g: 0.0,
+            b: 0.0,
+            a: 0.0
+        }
+    }
 }
 
 
@@ -60,5 +82,15 @@ impl PdfoxColor {
             "rgba" => PdfoxColor::RGBA(PdfoxColor_RGBA::from_json(&json)),
             _ => panic!("unknown color type")
         }
+    }
+
+    pub fn black() -> PdfoxColor {
+        PdfoxColor::RGBA(PdfoxColor_RGBA::black())
+    }
+    pub fn white() -> PdfoxColor {
+        PdfoxColor::RGBA(PdfoxColor_RGBA::white())
+    }
+    pub fn transparent() -> PdfoxColor {
+        PdfoxColor::RGBA(PdfoxColor_RGBA::transparent())
     }
 }

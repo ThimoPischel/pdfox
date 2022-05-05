@@ -4,11 +4,11 @@ use std::fs;
 
 #[derive(Debug)]
 pub struct Args {
-    data_json:   String,
-    data_dir:    Option<String>,
-    layout_json: Option<String>,
-    layout_dir:  Option<String>,
-    output_dir:  String
+    pub data_json:   String,
+    pub data_dir:    Option<String>,
+    pub layout_json: Option<String>,
+    pub layout_dir:  Option<String>,
+    pub output_dir:  String
 }
 impl Args {
     pub fn new() -> Args {

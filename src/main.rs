@@ -13,5 +13,11 @@ use args::*;
 fn main() {
     println!("\n************Starting**************\n");
     let my_args = Args::new();
-    println!("{:?}", my_args);
 }
+
+
+
+
+
+
+

@@ -5,6 +5,6 @@ pub struct PdfoxPagegroup {
 }
 impl PdfoxPagegroup {
     pub fn from_json(json: &Value) -> PdfoxPagegroup {
-         
+         PdfoxPagegroup {}
     }
 }

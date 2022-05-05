@@ -15,8 +15,7 @@ impl PdfoxPoints {
             koords: Vec::new()
         };
 
-        let is_relative = json_object["is_relative"];
-        points.is_relative = match is_relative {
+        points.is_relative = match &json_object["is_relative"]{
             Value::Null => points.is_relative,
             Value::Bool(b) => b,
             _ => panic!("points 'is_relative' field should be a bool")

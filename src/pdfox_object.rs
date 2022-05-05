@@ -20,19 +20,19 @@ impl PdfoxObject {
             _ => return Err("No Object")
         };
 
-        let pdfox_object_type = match json_object["type"] {
+        let pdfox_object_type = match &json_object["type"] {
             Value::String(s) => s,
             _ => return Err("Type is not set or string")
         };
 
-        let pdfox_object = json_object["value"];
+        let pdfox_object = &json_object["value"];
         if pdfox_object.is_null() {
             return Err("No value set")
         }
 
         Ok( match pdfox_object_type.as_str() {
             "link" => match pdfox_object {
-                Value::String(x) => PdfoxObject::Link(x),
+                Value::String(x) => PdfoxObject::Link(x.to_string()),
                 _ => return Err("Type 'link', but value is no String")
             },
             
@@ -55,12 +55,12 @@ impl PdfoxObject {
             },
 
             "bool" => match pdfox_object {
-                Value::Bool(x) => PdfoxObject::Bool(x),
+                Value::Bool(x) => PdfoxObject::Bool(x.clone()),
                 _ => return Err("Type 'bool', but value is no bool")
             },
 
             "string" => match pdfox_object {
-                Value::String(x) => PdfoxObject::String(x),
+                Value::String(x) => PdfoxObject::String(x.to_string()),
                 _ => return Err("Type 'string', but value is no String")
             },
 

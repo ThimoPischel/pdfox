@@ -85,8 +85,8 @@ Page: {}
 
 Export: {}
   export_name: String
-  ? links: <ObjectTypes>{}[]
-  #include <PrefabTypes>{}
+  ? links: Links[]
+  #include <PrefabTypes>{}[]
 
 Layout: {}
   name: String 

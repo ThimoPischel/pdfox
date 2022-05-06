@@ -63,6 +63,7 @@ ___________________________________________________________
   Export[]
 
 <PrefabTypes>
+  layout -> String
   pagegroup -> Page[]
 
 <ObjectTypes>
@@ -86,11 +87,11 @@ Page: {}
 Export: {}
   export_name: String
   ? links: Links[]
-  #include <PrefabTypes>{}[]
+  prefabs: <PrefabTypes>{}[]
 
 Layout: {}
   name: String 
-  #include <PrefabTypes>{}
+  prefabs: <PrefabTypes>{}[]
 
 
 Links: {}

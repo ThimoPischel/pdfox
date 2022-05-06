@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+mod pdfox_prefab;
 mod pdfox_color;
 mod pdfox_object;
 mod pdfox_line;

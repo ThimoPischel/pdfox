@@ -5,6 +5,7 @@ use crate::pdfox_export::*;
 use std::collections::HashMap;
 
 use serde_json::Value;
+use printpdf::pdf_document::*;
 
 
 pub struct PdfoxFactory {
@@ -13,7 +14,7 @@ pub struct PdfoxFactory {
     //fonts and images in future
 }
 impl PdfoxFactory {
-    pub fn Init(arg: &Args) -> Result<PdfoxFactory, Vec<String>> {
+    pub fn new(arg: &Args) -> Result<PdfoxFactory, Vec<String>> {
         PdfoxFactory {
 
             layouts: match arg.layout_json {
@@ -28,7 +29,7 @@ impl PdfoxFactory {
                             e.push("while parsing layouts_json");
                             return Err(e);
                         },
-                        Ok(ok_layouts) => layouts
+                        Ok(ok_layouts) => ok_layouts
                     }
                 }
             }, // End of layouts
@@ -53,8 +54,10 @@ impl PdfoxFactory {
     }
 
 
-    pub fn BuildFiles() -> Result<(), Vec<&str>> {
-        
+    pub fn build_files(&self) -> Result<Vec<String>, Vec<String>> {
+        for export in self.exports {
+            let mut doc : PdfDocument = PdfDocument::new
+        }
     }
 }
 

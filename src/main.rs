@@ -6,6 +6,7 @@ mod pdfox_link;
 mod pdfox_layout;
 mod pdfox_pagegroup;
 mod pdfox_page;
+mod pdfox_export;
 mod args;
 
 use args::*;

@@ -1,5 +1,7 @@
-use serde_json::Value;
+use crate::pdfox_link::*;
 use crate::pdfox_object::*;
+use std::collections::HashMap;
+use serde_json::Value;
 
 pub struct PdfoxExport {
     export_name: String,
@@ -7,12 +9,12 @@ pub struct PdfoxExport {
     objects: Vec<PdfoxObject>
 }
 impl PdfoxExport {
-    pub fn from_json(json: &Value) -> Result< Vec<PdfoxExport>, Vec<&str> > {
+    pub fn from_json(json: &Value) -> Result< Vec<PdfoxExport>, Vec<String> > {
         let mut result : Vec<PdfoxExport> = Vec::new();
         
         let json_array = match json.as_array() {
-            Err(e) => return Err(vec!["Export (data.json) has to be an array"]),
-            Ok(ok) => ok
+            None => return Err(vec!["Export (data.json) has to be an array".to_string()]),
+            Some(ok) => ok
         };
 
 
@@ -26,13 +28,13 @@ impl PdfoxExport {
             };
             
             let mut export_name = match single_export["export_name"].as_str() {
-                Some(o) => o,
-                None => return Err(vec![format!("the {} export array item has no 'export_name'")])
+                Some(o) => o.to_string(),
+                None => return Err(vec![format!("the {} export array item has no 'export_name'", count)])
             };
 
             let mut links = match load_links(&single_export["links"]) {
                 Ok(ok) => ok,
-                Err(e) => {
+                Err(mut e) => {
                     e.push(format!("in the {} export with name: {}", count, export_name));
                     return Err(e);
                 }
@@ -40,7 +42,7 @@ impl PdfoxExport {
 
             let mut objects = match load_objects(&single_export["objects"]) {
                 Ok(ok) => ok,
-                Err(e) => {
+                Err(mut e) => {
                     e.push(format!("in the {} export with name: {}", count, export_name));
                     return Err(e);
                 }
@@ -56,56 +58,68 @@ impl PdfoxExport {
         Ok(result)
     }
 
-    fn load_objects(json: &Value) -> Result< Vec<PdfoxObject>, Vec<&str> > {
-        let mut result : Vec<PdfoxObject> = Vec::new();
+}
 
-        let json_array = match json.as_array() {
-            Some(o) => o,
-            None => return Err(vec!["objects are no array"])
-        };
 
-        let mut count = 0;
-        for array_item in json_array {
-            count += 1;
-            result.push(
-                match PdfoxObject::from_json(&array_item) {
-                    Ok(ok) => ok,
-                    Err(e) => {
-                        e.push(format!("while parsing the {} object", count));
-                        return Err(e);
-                    }
+fn load_objects(json: &Value) -> Result<Vec<PdfoxObject>, Vec<String>> {
+    let mut result : Vec<PdfoxObject> = Vec::new();
+
+    let json_array = match json.as_array() {
+        Some(o) => o,
+        None => return Err(vec!["objects are no array".to_string()])
+    };
+
+    let mut count = 0;
+    for array_item in json_array {
+        count += 1;
+        result.push(
+            match PdfoxObject::from_json(&array_item) {
+                Ok(ok) => match ok {
+                    Some(object) => object,
+                    None => return Err(vec!["the object parsing went wrong".to_string()])
+                },
+                Err(mut e) => {
+                    e.push(format!("while parsing the {} object", count));
+                    return Err(e);
                 }
-            )
-        
-        Ok(result)
+            }
+        );
     }
     
-    fn load_links(json: &Value) -> Result<HashMap<String, PdfoxObject>, Vec<&str>> {
-        let mut result : HashMap<String, PdfoxObject> = HashMap::new();
+    Ok(result)
+}
 
-        let json_array = match json.as_array() {
+fn load_links(json: &Value) -> Result<HashMap<String, PdfoxObject>, Vec<String>> {
+    let mut result : HashMap<String, PdfoxObject> = HashMap::new();
+
+    let json_array = match json.as_array() {
+        Some(o) => o,
+        None => return Err(vec!["link map is no array".to_string()])
+    };
+
+    let mut count = 0;
+    for array_item in json_array {
+        count += 1;
+        let json_object = match array_item.as_object() {
             Some(o) => o,
-            None => return Err(vec!["link map is no array"])
+            None => return Err(vec![format!("the {} link map item is no object", count)])
         };
-
-        let mut count = 0;
-        for array_item in json_array {
-            count += 1;
-            let json_object = match array_item.as_object() {
+        let linkname = match &json_object["link"] {
+            Value::String(o) => o.to_string(),
+            _ => return Err(vec![format!("the {} link map item has no 'link' string field", count)])
+        };
+        let object = match PdfoxObject::from_json(&array_item) {
+            Err(mut e) => {
+                e.push("while loading links".to_string());
+                return Err(e);
+            }
+            Ok(ok) => match ok {
                 Some(o) => o,
-                None => return Err(vec![format!("the {} link map item is no object", count)])
-            };
-            let linkname = match json_object["link"] {
-                Value::String(o) => o,
-                _ => return Err(vec![format!("the {} link map item has no 'link' string field", count)])
-            };
-            let object = match PdfoxObject::from_json(&array_item) {
-                Err(e) => return Err(vec![e, format!("while parsing the {} link map item", count)]),
-                Ok(o) => o,         
-            };
-            result.insert(linkname, object);
-        }
-
-        Ok(result)
+                None => return Err(vec!["a link is not parsable".to_string()])
+            }
+        };
+        result.insert(linkname, object);
     }
+
+    Ok(result)
 }

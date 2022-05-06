@@ -16,7 +16,7 @@ pub struct PdfoxLine {
 }
 
 impl PdfoxLine {
-        pub fn from_json(json: &Value ) -> Result<PdfoxLine, Vec<&str>> {
+        pub fn from_json(json: &Value ) -> Result<PdfoxLine, Vec<String>> {
             let json_object = json.as_object().expect("line value is no Object!");
 
             if !json_object.contains_key("points"){
@@ -24,23 +24,23 @@ impl PdfoxLine {
             }
 
             let points : Link<PdfoxPoints> = match PdfoxObject::from_json(&json["points"]) {
-                Err(e) => {
-                    e.push("in line");
+                Err(mut e) => {
+                    e.push("in line".to_string());
                     return Err(e);
                 },
                 Ok(ok) => match ok { 
-                    None => return Err(vec!["points are required in line"]),
+                    None => return Err(vec!["points are required in line".to_string()]),
                     Some(o) => match o {
                         PdfoxObject::Points(v) => Link::Value(v),
                         PdfoxObject::Link(l) => Link::Link(l),
-                        _ => return Err(vec!["Line expected 'points' to be of type points!"]) 
+                        _ => return Err(vec!["Line expected 'points' to be of type points!".to_string()]) 
                     }
                 }
             };
 
             let is_closed = match PdfoxObject::from_json(&json["is_closed"]) {
-                Err(e) => {
-                    e.push("in line");
+                Err(mut e) => {
+                    e.push("in line".to_string());
                     return Err(e);
                 },
                 Ok(ok) => match ok {
@@ -48,14 +48,14 @@ impl PdfoxLine {
                     Some(o) => match o {
                         PdfoxObject::Bool(v) => Link::Value(v),
                         PdfoxObject::Link(l) => Link::Link(l),
-                        _ => return Err(vec!["Line expected 'is_closed' to be of type bool!"])
+                        _ => return Err(vec!["Line expected 'is_closed' to be of type bool!".to_string()])
                     }
                 }
             };
 
             let has_fill = match PdfoxObject::from_json(&json["has_fill"]){
-                Err(e) => {
-                    e.push("in line");
+                Err(mut e) => {
+                    e.push("in line".to_string());
                     return Err(e);
                 },
                 Ok(ok) => match ok {
@@ -63,14 +63,14 @@ impl PdfoxLine {
                     Some(o) => match o {
                         PdfoxObject::Bool(v) => Link::Value(v),
                         PdfoxObject::Link(l) => Link::Link(l),
-                        _ => return Err(vec!["Line expected 'has_fill' to be of type bool!"])
+                        _ => return Err(vec!["Line expected 'has_fill' to be of type bool!".to_string()])
                     }
                 }
             };
             
             let has_stroke = match PdfoxObject::from_json(&json["has_stroke"]){
-                Err(e) => {
-                    e.push("in line");
+                Err(mut e) => {
+                    e.push("in line".to_string());
                     return Err(e);
                 },
                 Ok(ok) => match ok {
@@ -84,8 +84,8 @@ impl PdfoxLine {
             };
 
             let is_clipping_path = match PdfoxObject::from_json(&json["is_clipping_path"]){
-                Err(e) => {
-                    e.push("in line");
+                Err(mut e) => {
+                    e.push("in line".to_string());
                     return Err(e);
                 },
                 Ok(ok) => match ok {
@@ -93,14 +93,14 @@ impl PdfoxLine {
                     Some(o) => match o {
                         PdfoxObject::Bool(v) => Link::Value(v),
                         PdfoxObject::Link(l) => Link::Link(l),
-                        _ => return Err(vec!["Line expected 'is_clipping_path' to be of type bool!"])
+                        _ => return Err(vec!["Line expected 'is_clipping_path' to be of type bool!".to_string()])
                     }
                 }
             };
 
             let fill_color = match PdfoxObject::from_json(&json["fill_color"]) {
-                Err(e) => {
-                    e.push("in line");
+                Err(mut e) => {
+                    e.push("in line".to_string());
                     return Err(e);
                 },
                 Ok(ok) => match ok {
@@ -108,14 +108,14 @@ impl PdfoxLine {
                     Some(o) => match o {
                         PdfoxObject::Color(v) => Link::Value(v),
                         PdfoxObject::Link(l) => Link::Link(l),
-                        _ => return Err(vec!["Line expected 'fill_color' to be of type color!"])
+                        _ => return Err(vec!["Line expected 'fill_color' to be of type color!".to_string()])
                     }
                 }
             };
 
             let border_color = match PdfoxObject::from_json(&json["border_color"]) {
-                Err(e) => {
-                    e.push("in line");
+                Err(mut e) => {
+                    e.push("in line".to_string());
                     return Err(e);
                 },
                 Ok(ok) => match ok {

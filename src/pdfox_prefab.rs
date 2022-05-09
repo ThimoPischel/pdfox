@@ -1,4 +1,7 @@
+use crate::pdfox_factory::*;
 use crate::pdfox_pagegroup::*;
+use crate::pdfox_layout::*;
+use crate::pdfox_prefab::*;
 use serde_json::Value;
 
 pub enum PdfoxPrefab {
@@ -48,6 +51,16 @@ impl PdfoxPrefab {
         }
 
         Ok(result)
+    }
+
+    pub fn build(&self, factory: &mut PdfoxFactory)
+        -> Result<(),Vec<String>> 
+    {
+        match &self {
+            PdfoxPrefab::Layout(s) => factory.layouts.layouts.get(s)
+                                    .expect("try to use a layout without matching link name")
+                                    
+        }
     }
 }
 

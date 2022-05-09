@@ -5,10 +5,12 @@ use crate::pdfox_prefab::*;
 
 
 pub struct PdfoxLayout {
-
+    pub layouts: HashMap<String, Vec<PdfoxPrefab>>
 }
 impl PdfoxLayout {
-    pub fn from_json(json: &Value) -> Result<HashMap<String, Vec<PdfoxPrefab>>, Vec<String>> {
+    pub fn new() -> PdfoxLayout { PdfoxLayout { layouts: HashMap::new() }}
+
+    pub fn from_json(json: &Value) -> Result<PdfoxLayout, Vec<String>> {
         let mut layouts : HashMap<String, Vec<PdfoxPrefab>> = HashMap::new();
         let json_array = match json.as_array() {
             Some(o) => o,
@@ -37,6 +39,6 @@ impl PdfoxLayout {
             layouts.insert(layout_name.to_string(), prefabs);
         }
 
-        Ok(layouts)
+        Ok(PdfoxLayout { layouts })
     }
 }

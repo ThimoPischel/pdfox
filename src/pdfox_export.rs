@@ -1,13 +1,17 @@
+use crate::pdfox_factory::*;
 use crate::pdfox_link::*;
+use crate::pdfox_layout::*;
 use crate::pdfox_prefab::*;
 use crate::pdfox_object::*;
 use std::collections::HashMap;
 use serde_json::Value;
+use printpdf::PdfDocumentReference;
+use printpdf::IndirectFontRef;
 
 pub struct PdfoxExport {
-    export_name: String,
-    links: HashMap<String, PdfoxObject>,
-    prefabs: Vec<PdfoxPrefab>
+    pub export_name: String,
+    pub links: HashMap<String, PdfoxObject>,
+    pub prefabs: Vec<PdfoxPrefab>
 }
 impl PdfoxExport {
     pub fn from_json(json: &Value) -> Result< Vec<PdfoxExport>, Vec<String> > {
@@ -57,6 +61,15 @@ impl PdfoxExport {
         }
 
         Ok(result)
+    }
+
+    pub fn build(&self, factory: &mut PdfoxFactory) -> Result<(),Vec<String>> 
+    {
+        for prefab in &self.prefabs {
+            prefab.build(&mut factory);
+        }
+
+        Ok(())
     }
 
 }

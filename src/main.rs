@@ -9,6 +9,7 @@ mod pdfox_layout;
 mod pdfox_pagegroup;
 mod pdfox_page;
 mod pdfox_export;
+mod pdfox_factory;
 mod args;
 
 use args::*;

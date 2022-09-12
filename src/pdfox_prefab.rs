@@ -57,10 +57,19 @@ impl PdfoxPrefab {
         -> Result<(),Vec<String>> 
     {
         match &self {
-            PdfoxPrefab::Layout(s) => factory.layouts.layouts.get(s)
-                                    .expect("try to use a layout without matching link name")
-                                    
-        }
+            PdfoxPrefab::Layout(s) => match factory.layouts.layout_map.get(s) {
+                Some(layout) => match layout.build(&mut factory){
+                    Err(mut e) => {
+                        e.push(format!("while building layout {}", s));
+                        return Err(e);
+                    }
+                },
+                None => return Err(vec!["try to use a layout without matching link name".to_string()])
+            }
+            PdfoxPrefab::Pagegroup(p) => p.build(&mut factory)
+        };
+
+        Ok(())
     }
 }
 

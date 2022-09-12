@@ -13,7 +13,7 @@ use printpdf::pdf_document::*;
 use printpdf::*;
 
 pub struct PdfoxFactory {
-    pub layouts: PdfoxLayout,
+    pub linkable_layouts: PdfoxLayout,
     pub exports: Vec<PdfoxExport>,
     pub font_refs: HashMap<String, Option<IndirectFontRef>>,
     pub font_paths: HashMap<String, String>,

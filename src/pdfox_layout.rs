@@ -3,15 +3,15 @@ use std::collections::HashMap;
 use crate::pdfox_pagegroup::*;
 use crate::pdfox_prefab::*;
 
+type LayoutMapType = HashMap<String, Vec<PdfoxPrefab>>;
 
-pub struct PdfoxLayout {
-    pub layouts: HashMap<String, Vec<PdfoxPrefab>>
+pub struct PdfoxLayouts {
+    layouts: LayoutMapType 
 }
-impl PdfoxLayout {
-    pub fn new() -> PdfoxLayout { PdfoxLayout { layouts: HashMap::new() }}
 
-    pub fn from_json(json: &Value) -> Result<PdfoxLayout, Vec<String>> {
-        let mut layouts : HashMap<String, Vec<PdfoxPrefab>> = HashMap::new();
+impl PdfoxLayouts {
+    pub fn from_json<PdfoxLayouts>(json: &Value) -> Result<PdfoxLayouts, Vec<String>> {
+        let mut layouts : LayoutMapType = LayoutMapType::new();
         let json_array = match json.as_array() {
             Some(o) => o,
             None => return Err(vec!["Layout json has to be an array".to_string()])
@@ -39,6 +39,7 @@ impl PdfoxLayout {
             layouts.insert(layout_name.to_string(), prefabs);
         }
 
-        Ok(PdfoxLayout { layouts })
+        PdfoxLayouts{ layouts: layouts}
+        //Ok( PdfoxLayouts { layouts} )
     }
 }
